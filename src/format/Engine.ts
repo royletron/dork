@@ -165,11 +165,22 @@ export class DorkEntity {
 export class DorkPlayer {
   public location: DorkLocation;
   public position: Position;
-  public facing: Position;
-  constructor(location: DorkLocation, position: Position, facing: Position) {
+  public facing: FacingPosition;
+  constructor(location: DorkLocation, position: Position, facing: FacingPosition) {
     this.location = location;
     this.position = position;
     this.facing = facing;
+  }
+  public visibleObjects(): DorkEntity[] {
+    const visibleSquares = calculateSight(this.position, this.facing);
+    const visibleObjects = this.location.children?.filter((child) => {
+      if (child instanceof DorkPositional) {
+        return visibleSquares.includes(child.position)
+      } else {
+        return false
+      }
+    }) ?? [];
+    return visibleObjects
   }
 }
 
@@ -179,11 +190,11 @@ export class DorkPositional extends DorkEntity {
   public position: Position;
   constructor(config: any) {
     super(config);
-    this.position = config.position || Position.CENTER;
+    this.position = config.position || CenterPosition.CENTER;
   }
 }
 
-export class DorkItem extends DorkEntity {}
+export class DorkItem extends DorkPositional {}
 
 export class CLI implements DorkRenderer {
   constructor() {}

@@ -1,0 +1,13 @@
+player:
+  location: room-1
+  position: s
+  facing: n
+entities:
+  - type: location
+    id: room-1
+    description: a room
+    entities:
+      - type: item
+        position: e
+        id: key-1
+        description: a key

@@ -1,0 +1,21 @@
+{
+  "name": "dork",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@types/fs-extra": "^9.0.13",
+    "@types/node": "^18.6.5",
+    "@types/uuid": "^8.3.4",
+    "@types/yaml": "^1.9.7",
+    "@types/yargs": "^17.0.11",
+    "fs-extra": "^10.1.0",
+    "typescript": "^4.7.4",
+    "uuid": "^8.3.2",
+    "yaml": "^2.1.1",
+    "yargs": "^17.5.1"
+  }
+}

@@ -1,6 +1,8 @@
 import uuid from "uuid";
 
-enum Position {
+type SightCone = Array<Position>;
+
+enum FacingPosition {
   EAST = "e",
   WEST = "w",
   NORTH = "n",
@@ -8,8 +10,127 @@ enum Position {
   NORTH_EAST = "ne",
   NORTH_WEST = "nw",
   SOUTH_EAST = "se",
-  SOUTH_WEST = "sw",
+  SOUTH_WEST = "sw"
+}
+
+enum CenterPosition {
   CENTER = "c",
+}
+
+type Position = FacingPosition | CenterPosition;
+
+function calculateSight(position: Position, facing: FacingPosition): SightCone {
+  const Pos = { ...FacingPosition, ...CenterPosition };
+
+  switch (position) {
+    case Pos.NORTH_EAST:
+    case Pos.NORTH_WEST:
+    case Pos.SOUTH_WEST:
+    case Pos.SOUTH_WEST:
+      throw new Error("Unimplemented position")
+    case Pos.CENTER:
+      switch (facing) {
+        case Pos.EAST:
+          return [Pos.CENTER, Pos.EAST, Pos.NORTH_EAST, Pos.SOUTH_EAST];
+        case Pos.WEST:
+          return [Pos.CENTER, Pos.WEST, Pos.NORTH_WEST, Pos.SOUTH_WEST];
+        case Pos.NORTH:
+          return [Pos.CENTER, Pos.NORTH, Pos.NORTH_EAST, Pos.NORTH_WEST];
+        case Pos.SOUTH:
+          return [Pos.CENTER, Pos.SOUTH, Pos.SOUTH_EAST, Pos.SOUTH_WEST];
+        case Pos.NORTH_EAST:
+          return [Pos.CENTER, Pos.NORTH, Pos.EAST, Pos.NORTH_EAST];
+        case Pos.NORTH_WEST:
+          return [Pos.CENTER, Pos.NORTH, Pos.WEST, Pos.NORTH_WEST];
+        case Pos.SOUTH_EAST:
+          return [Pos.CENTER, Pos.SOUTH, Pos.EAST, Pos.SOUTH_EAST];
+        case Pos.SOUTH_WEST:
+          return [Pos.CENTER, Pos.SOUTH, Pos.WEST, Pos.SOUTH_WEST];
+      }
+
+      case Pos.NORTH:
+        switch (facing) {
+          case Pos.EAST:
+            return [Pos.NORTH, Pos.NORTH_EAST, Pos.CENTER, Pos.EAST, Pos.SOUTH, Pos.SOUTH_EAST];
+          case Pos.WEST:
+            return [Pos.NORTH, Pos.NORTH_WEST, Pos.CENTER, Pos.WEST, Pos.SOUTH, Pos.SOUTH_WEST];
+          case Pos.NORTH:
+            return [Pos.NORTH]; 
+          case Pos.SOUTH:
+            return [Pos.NORTH, Pos.CENTER, Pos.SOUTH, Pos.SOUTH_WEST, Pos.SOUTH_WEST, Pos.EAST, Pos.WEST]
+          case Pos.NORTH_EAST:
+            return [Pos.NORTH, Pos.NORTH_EAST, Pos.EAST]
+          case Pos.NORTH_WEST:
+             return [Pos.NORTH, Pos.NORTH_WEST, Pos.WEST] 
+          case Pos.SOUTH_EAST:
+             return [Pos.NORTH, Pos.NORTH_EAST, Pos.CENTER, Pos.EAST, Pos.SOUTH, Pos.SOUTH_EAST]
+          case Pos.SOUTH_WEST:
+            return [Pos.NORTH, Pos.NORTH_WEST, Pos.WEST, Pos.CENTER, Pos.SOUTH_WEST, Pos.SOUTH]
+        }
+
+      case Pos.SOUTH:
+        switch (facing) {
+          case Pos.EAST:
+            return [Pos.SOUTH, Pos.SOUTH_EAST, Pos.CENTER, Pos.EAST, Pos.NORTH, Pos.NORTH_EAST]
+          case Pos.WEST:
+            return [Pos.SOUTH, Pos.SOUTH_WEST, Pos.CENTER, Pos.WEST, Pos.NORTH, Pos.NORTH_WEST]
+          case Pos.NORTH:
+            return [Pos.SOUTH, Pos.CENTER, Pos.NORTH, Pos.NORTH_EAST, Pos.NORTH_WEST, Pos.WEST, Pos.EAST]
+          case Pos.SOUTH:
+            return [Pos.SOUTH]
+          case Pos.NORTH_EAST:
+            return [Pos.SOUTH, Pos.SOUTH_EAST, Pos.CENTER, Pos.EAST, Pos.NORTH, Pos.NORTH_EAST]
+          case Pos.NORTH_WEST:
+            return [Pos.SOUTH, Pos.SOUTH_WEST, Pos.CENTER, Pos.WEST, Pos.NORTH, Pos.NORTH_WEST]
+          case Pos.SOUTH_EAST:
+            return [Pos.SOUTH, Pos.SOUTH_EAST, Pos.EAST]
+          case Pos.SOUTH_WEST:
+            return [Pos.SOUTH, Pos.SOUTH_WEST, Pos.WEST]
+        }
+
+      case Pos.WEST:
+        switch (facing) {
+          case Pos.EAST:
+            return [Pos.WEST, Pos.CENTER, Pos.EAST, Pos.NORTH, Pos.SOUTH, Pos.NORTH_EAST, Pos.SOUTH_EAST]
+          case Pos.WEST:
+            return [Pos.WEST]
+          case Pos.NORTH:
+            return [Pos.WEST, Pos.CENTER, Pos.EAST, Pos.NORTH_WEST, Pos.NORTH, Pos.NORTH_EAST]
+          case Pos.SOUTH:
+            return [Pos.WEST, Pos.SOUTH_WEST, Pos.CENTER, Pos.SOUTH, Pos.EAST, Pos.SOUTH_EAST]
+          case Pos.NORTH_EAST:
+            return [Pos.WEST, Pos.CENTER, Pos.EAST, Pos.NORTH_WEST, Pos.NORTH, Pos.NORTH_EAST]
+          case Pos.NORTH_WEST:
+            return [Pos.WEST, Pos.NORTH_WEST, Pos.NORTH]
+          case Pos.SOUTH_EAST:
+            return [Pos.WEST, Pos.SOUTH_WEST, Pos.CENTER, Pos.SOUTH, Pos.EAST, Pos.SOUTH_EAST]
+          case Pos.SOUTH_WEST:
+            return [Pos.WEST, Pos.SOUTH_WEST, Pos.SOUTH]
+        }
+
+      case Pos.EAST:
+        switch (facing) {
+          case Pos.EAST:
+            return [Pos.EAST]
+          case Pos.WEST:
+            return [Pos.EAST, Pos.CENTER, Pos.WEST, Pos.NORTH, Pos.SOUTH, Pos.NORTH_WEST, Pos.SOUTH_WEST]
+          case Pos.NORTH:
+            return [Pos.EAST, Pos.CENTER, Pos.WEST, Pos.NORTH_WEST, Pos.NORTH, Pos.NORTH_EAST]
+          case Pos.SOUTH:
+            return [Pos.EAST, Pos.CENTER, Pos.WEST, Pos.SOUTH_EAST, Pos.SOUTH, Pos.SOUTH_WEST]
+          case Pos.NORTH_EAST:
+            return [Pos.EAST, Pos.NORTH, Pos.NORTH_EAST]
+          case Pos.NORTH_WEST:
+            return [Pos.EAST, Pos.CENTER, Pos.WEST, Pos.NORTH_EAST, Pos.NORTH, Pos.NORTH_WEST]
+          case Pos.SOUTH_EAST:
+            return [Pos.SOUTH_EAST, Pos.EAST, Pos.SOUTH]
+          case Pos.SOUTH_WEST:
+            return [Pos.EAST, Pos.CENTER, Pos.WEST, Pos.NORTH_WEST, Pos.NORTH, Pos.NORTH_EAST]
+        }
+
+    default:
+      throw new Error("Default path")
+  }
 }
 
 interface DorkRenderer {

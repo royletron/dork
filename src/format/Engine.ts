@@ -53,13 +53,16 @@ export class DorkPlayer {
 }
 
 export class DorkLocation extends DorkEntity {}
-export class DorkItem extends DorkEntity {
+
+export class DorkPositional extends DorkEntity {
   public position: Position;
   constructor(config: any) {
     super(config);
     this.position = config.position || Position.CENTER;
   }
 }
+
+export class DorkItem extends DorkEntity {}
 
 export class CLI implements DorkRenderer {
   constructor() {}
